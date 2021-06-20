@@ -1,0 +1,34 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  DiscordNotifierIAM:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: DiscordNotifierIAM
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
+  LambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: discord-notifier
+      Role: !GetAtt DiscordNotifierIAM.Arn
+      CodeUri: ./src
+      Handler: index.handler
+      Runtime: python3.8
+      PackageType: Zip
+      Tracing: Active
+  LambdaFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${LambdaFunction}
+      RetentionInDays: 1
