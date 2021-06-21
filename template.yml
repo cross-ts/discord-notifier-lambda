@@ -17,6 +17,7 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
         - arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole
   AwsLambdaPowertoolsPythonLayer:
     Type: AWS::Serverless::Application
     Properties:
